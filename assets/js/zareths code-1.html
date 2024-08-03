@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Translator</title>
+    <style>
+    /* style.css */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .header, .footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .translation-box, #translated-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        resize: none;
+    }
+    
+    button {
+        background-color: #d9009f;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+    }  
+    </style>  
+</head>
+<body>
+    <nav class="header">Translate It</nav>
+    <div class="main">
+        <div class="translation-box">
+            <textarea id="input-text" placeholder="Enter the sentence"></textarea>
+        </div>
+        <button id="btn-translate">Translate</button>
+        <div id="translated-box">
+            <textarea id="output-text" placeholder="Translated text will appear here"></textarea>
+        </div>
+    </div>
+    <footer class="footer">About Us</footer>
+    <select id="language-select">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+    </select>
+    <script src="translate.js">
+    // translate.js
+var inputText = document.querySelector('#input-text');
+var outputText = document.querySelector('#output-text');
+var buttonTranslate = document.querySelector('#btn-translate');
+var apiUrl = 'https://api.funtranslations.com/translate/minion.json';
+var languageSelect = document.getElementById('language-select');
+var selectedLanguage;
+
+languageSelect.addEventListener('change', function() {
+    selectedLanguage = languageSelect.value;
+    console.log('Selected language:', selectedLanguage);
+});
+const translateButton = document.getElementById('translate-btn');
+const inputText = document.getElementById('input-text');
+const translatedText = document.getElementById('translated-text');
+
+translateButton.addEventListener('click', async () => {
+    const textToTranslate = inputText.value;
+    const translatedResult = await translateText(textToTranslate);
+    translatedText.textContent = translatedResult;
+});
+
+async function translateText(text) {
+    return 'Translated: ' + text.toUpperCase();
+}
+
+function errorHandle(error) {
+    alert('Error occurred');
+    console.log('Error occurred', error);
+}
+
+function clickHandler() {
+    var text = inputText.value;
+    var updatedUrl = apiUrl + '?text=' + encodeURIComponent(text);
+
+    fetch(updatedUrl)
+        .then(response => response.json())
+        .then(json => {
+            outputText.innerText = json.contents.translated;
+        })
+        .catch(errorHandle);
+}
+buttonTranslate.addEventListener('click', clickHandler);
+</script>
+</body>
+</html>
+
